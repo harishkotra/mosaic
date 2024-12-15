@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { AlertCircle, Code2, Package, X } from 'lucide-react';
@@ -183,14 +183,11 @@ const DraggableComponent = ({ id, children, index, moveComponent }) => {
   const [{ isDragging }, drag] = useDrag({
     type: 'component',
     item: { id, index },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
   });
 
   const [, drop] = useDrop({
     accept: 'component',
-    hover: (item, monitor) => {
+    hover: (item: DragItem) => {
       if (!moveComponent) return;
       const dragIndex = item.index;
       const hoverIndex = index;

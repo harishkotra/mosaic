@@ -10,6 +10,7 @@ import {
   Bot,
   Zap
 } from 'lucide-react';
+import MosaicBuilder from './MosaicBuilder';
 
 const MosaicLanding = () => {
   const [showBuilder, setShowBuilder] = useState(false);

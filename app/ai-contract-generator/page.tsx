@@ -8,7 +8,6 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { materialOceanic } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Copy, Wand2, Download, Upload, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { ethers } from 'ethers';
 
 // Network configurations
 // const NETWORKS = {
@@ -119,101 +118,101 @@ export default function AIContractGenerator() {
     }
   };
 
-  // Deployment Function
-  const deployContract = async (isTestnet: boolean) => {
-    if (!generatedContract) {
-      toast.error('Generate a contract first');
-      return;
-    }
+//   // Deployment Function
+//   const deployContract = async (isTestnet: boolean) => {
+//     if (!generatedContract) {
+//       toast.error('Generate a contract first');
+//       return;
+//     }
 
-    try {
-      // Check if MetaMask is installed
-      if (!window.ethereum) {
-        toast.error('Please install MetaMask to deploy contracts');
-        return;
-      }
+//     try {
+//       // Check if MetaMask is installed
+//       if (!window.ethereum) {
+//         toast.error('Please install MetaMask to deploy contracts');
+//         return;
+//       }
 
-      // Request account access
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
+//       // Request account access
+//       await window.ethereum.request({ method: 'eth_requestAccounts' });
 
-      // Set deployment status
-      setDeploymentStatus({
-        type: 'info',
-        message: `Deploying to ${isTestnet ? 'Sepolia Testnet' : 'Mantle Mainnet'}...`
-      });
+//       // Set deployment status
+//       setDeploymentStatus({
+//         type: 'info',
+//         message: `Deploying to ${isTestnet ? 'Sepolia Testnet' : 'Mantle Mainnet'}...`
+//       });
 
-      // Select network based on testnet flag
-      const network = isTestnet ? NETWORKS.mantleTestnet : NETWORKS.mantle;
+//       // Select network based on testnet flag
+//       const network = isTestnet ? NETWORKS.mantleTestnet : NETWORKS.mantle;
 
-      // Switch to the correct network
-      try {
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: network.chainId }],
-        });
-      } catch (switchError: any) {
-        // If the network isn't added, add it
-        if (switchError.code === 4902) {
-          await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [{
-              chainId: network.chainId,
-              chainName: network.chainName,
-              nativeCurrency: network.nativeCurrency,
-              rpcUrls: network.rpcUrls,
-              blockExplorerUrls: network.blockExplorerUrls
-            }],
-          });
-        }
-      }
+//       // Switch to the correct network
+//       try {
+//         await window.ethereum.request({
+//           method: 'wallet_switchEthereumChain',
+//           params: [{ chainId: network.chainId }],
+//         });
+//       } catch (switchError: any) {
+//         // If the network isn't added, add it
+//         if (switchError.code === 4902) {
+//           await window.ethereum.request({
+//             method: 'wallet_addEthereumChain',
+//             params: [{
+//               chainId: network.chainId,
+//               chainName: network.chainName,
+//               nativeCurrency: network.nativeCurrency,
+//               rpcUrls: network.rpcUrls,
+//               blockExplorerUrls: network.blockExplorerUrls
+//             }],
+//           });
+//         }
+//       }
 
-      // Create provider and signer
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
+//       // Create provider and signer
+//       const provider = new ethers.BrowserProvider(window.ethereum);
+//       const signer = await provider.getSigner();
 
-      // Simplified contract deployment (you might want to improve compilation)
-      const factory = new ethers.ContractFactory(
-        [], // ABI (placeholder)
-        `0x${Buffer.from(generatedContract).toString('hex')}`, // Very basic bytecode conversion
-        signer
-      );
+//       // Simplified contract deployment (you might want to improve compilation)
+//       const factory = new ethers.ContractFactory(
+//         [], // ABI (placeholder)
+//         `0x${Buffer.from(generatedContract).toString('hex')}`, // Very basic bytecode conversion
+//         signer
+//       );
 
-      const contract = await factory.deploy();
-      const deployedContract = await contract.deployTransaction.wait();
+//       const contract = await factory.deploy();
+//       const deployedContract = await contract.deployTransaction.wait();
 
-      // Update deployment status
-      setDeploymentStatus({
-        type: 'success',
-        message: (
-          <>
-            Contract deployed successfully! 
-            <a 
-              href={`${network.blockExplorerUrls[0]}/address/${deployedContract.contractAddress}`} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="ml-2 text-blue-600 underline"
-            >
-              View on Explorer
-            </a>
-          </>
-        )
-      });
+//       // Update deployment status
+//       setDeploymentStatus({
+//         type: 'success',
+//         message: (
+//           <>
+//             Contract deployed successfully! 
+//             <a 
+//               href={`${network.blockExplorerUrls[0]}/address/${deployedContract.contractAddress}`} 
+//               target="_blank" 
+//               rel="noopener noreferrer"
+//               className="ml-2 text-blue-600 underline"
+//             >
+//               View on Explorer
+//             </a>
+//           </>
+//         )
+//       });
 
-    } catch (error: any) {
-      console.error('Deployment error:', error);
+//     } catch (error: any) {
+//       console.error('Deployment error:', error);
       
-      const errorMessage = error.code === 4001 
-        ? 'Transaction rejected by user' 
-        : error.message.includes('insufficient funds')
-        ? 'Insufficient MNT balance for gas fees'
-        : 'Deployment failed';
+//       const errorMessage = error.code === 4001 
+//         ? 'Transaction rejected by user' 
+//         : error.message.includes('insufficient funds')
+//         ? 'Insufficient MNT balance for gas fees'
+//         : 'Deployment failed';
 
-      setDeploymentStatus({
-        type: 'error',
-        message: `Deployment error: ${errorMessage}`
-      });
-    }
-  };
+//       setDeploymentStatus({
+//         type: 'error',
+//         message: `Deployment error: ${errorMessage}`
+//       });
+//     }
+//   };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -414,10 +413,10 @@ export default function AIContractGenerator() {
           Tips for Best Results
         </h2>
         <ul className="list-disc list-inside space-y-2 text-gray-700">
-          <li>Be as specific as possible about your contract's requirements</li>
+          <li>Be as specific as possible about your contract&apos;s requirements</li>
           <li>Include details about token type, access control, and special features</li>
           <li>Mention any Mantle-specific optimizations you need</li>
-          <li>Describe the contract's purpose and core functionality</li>
+          <li>Describe the contract&apos;s purpose and core functionality</li>
         </ul>
       </div>
 

@@ -51,7 +51,7 @@ export default function HowItWorks() {
                         <li>Reorder components</li>
                         <li>Remove unnecessary modules</li>
                         <li>See real-time code generation</li>
-                        <li>Visualize your contract's structure</li>
+                        <li>Visualize your contract&apos;s structure</li>
                     </ul>
                     <p class="mt-4 italic text-gray-600">
                         Each drag updates the generated Solidity code instantly!
