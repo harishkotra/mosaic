@@ -35,19 +35,19 @@ Mosaic is an innovative, no-code smart contract builder specifically designed fo
 ### Installation
 
 1. Clone the repository
-2. 
+
 ```
 git clone https://github.com/yourusername/mosaic.git
 cd mosaic
 ```
 
-Install dependencies
+2. Install dependencies
 
 ```
 npm install
 ```
 
-Run the development server
+3. Run the development server
 
 ```
 npm run dev
@@ -98,9 +98,9 @@ Contributions are welcome! Please see our Contributing Guidelines for details.
 
 ## 🌐 Roadmap
 
-- Support for more contract templates
-- Enhanced gas estimation
-- Integrated contract verification
-- AI-assisted contract generation
+[] Support for more contract templates
+[] Enhanced gas estimation
+[] Integrated contract verification
+[] AI-assisted contract generation
 
 Built with ❤️ for Web3 Developers
