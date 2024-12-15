@@ -71,7 +71,7 @@ export default function Home() {
               Visual Builder
             </Link>
             <Link 
-              href="/ai-generator" 
+              href="/ai-contract-generator" 
               className="bg-white text-[#2D3FE7] border-2 border-[#2D3FE7] px-8 py-4 rounded-xl text-xl hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
             >
               <span className="material-icons">smart_toy</span>
