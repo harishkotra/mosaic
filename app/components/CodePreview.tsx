@@ -1,16 +1,9 @@
-"use client";
-
 import React, { useEffect, useRef } from 'react';
 import Prism from 'prismjs';
-import 'prismjs/components/prism-solidity';
-import 'prismjs/themes/prism-tomorrow.css';
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-interface CodePreviewProps {
-  code: string;
-}
-
-export function CodePreview({ code }: CodePreviewProps) {
-  const codeRef = useRef<HTMLElement>(null);
+export const CodePreview = ({ code }) => {
+  const codeRef = useRef(null);
 
   useEffect(() => {
     if (codeRef.current) {
@@ -19,10 +12,12 @@ export function CodePreview({ code }: CodePreviewProps) {
   }, [code]);
 
   return (
-    <pre className="text-sm font-mono overflow-auto">
-      <code ref={codeRef} className="language-solidity">
-        {code}
-      </code>
-    </pre>
+    <ScrollArea className="h-full w-full">
+      <pre className="p-4 rounded-lg text-sm">
+        <code ref={codeRef} className="language-solidity">
+          {code}
+        </code>
+      </pre>
+    </ScrollArea>
   );
-}
+};

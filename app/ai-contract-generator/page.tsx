@@ -11,30 +11,30 @@ import { toast } from 'sonner';
 import { ethers } from 'ethers';
 
 // Network configurations
-const NETWORKS = {
-    mantleTestnet: {
-        chainId: '0x138B', // 5003 in hex
-        rpcUrls: ['https://rpc.sepolia.mantle.xyz'],
-        chainName: 'Mantle Sepolia Testnet',
-        nativeCurrency: {
-            name: 'MNT',
-            symbol: 'MNT',
-            decimals: 18
-        },
-        blockExplorerUrls: ['https://sepolia.mantlescan.xyz']
-    },
-    mantle: {
-        chainId: '0x1388', // 5000 in hex
-        rpcUrls: ['https://rpc.mantle.xyz'],
-        chainName: 'Mantle',
-        nativeCurrency: {
-            name: 'MNT',
-            symbol: 'MNT',
-            decimals: 18
-        },
-        blockExplorerUrls: ['https://mantlescan.xyz']
-    }
-};
+// const NETWORKS = {
+//     mantleTestnet: {
+//         chainId: '0x138B', // 5003 in hex
+//         rpcUrls: ['https://rpc.sepolia.mantle.xyz'],
+//         chainName: 'Mantle Sepolia Testnet',
+//         nativeCurrency: {
+//             name: 'MNT',
+//             symbol: 'MNT',
+//             decimals: 18
+//         },
+//         blockExplorerUrls: ['https://sepolia.mantlescan.xyz']
+//     },
+//     mantle: {
+//         chainId: '0x1388', // 5000 in hex
+//         rpcUrls: ['https://rpc.mantle.xyz'],
+//         chainName: 'Mantle',
+//         nativeCurrency: {
+//             name: 'MNT',
+//             symbol: 'MNT',
+//             decimals: 18
+//         },
+//         blockExplorerUrls: ['https://mantlescan.xyz']
+//     }
+// };
 
 export default function AIContractGenerator() {
   const [prompt, setPrompt] = useState('');
@@ -339,8 +339,76 @@ export default function AIContractGenerator() {
           Deploy to Mainnet
         </Button> */}
       </div>
+      
+      <div className="mt-8 bg-blue-50/50 p-6 rounded-lg border border-blue-200">
+        <h2 className="text-2xl font-semibold mb-4 text-[#2D3FE7]">
+            Mantle-Specific Contract Prompt Ideas
+        </h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+            {
+                title: "Cross-Chain Token Bridge",
+                prompt: "Design a cross-chain ERC20 token bridge between Mantle L1 and L2, implementing secure proof verification and gas-optimized transfer mechanisms."
+            },
+            {
+                title: "Meta Transaction Gasless Wallet",
+                prompt: "Create a meta-transaction enabled wallet contract for Mantle that allows gasless transactions, with nonce management and signature verification using Mantle's gas price oracle."
+            },
+            {
+                title: "Dynamic Gas Price NFT Marketplace",
+                prompt: "Develop an NFT marketplace contract that dynamically adjusts listing fees based on Mantle's current gas price oracle, with built-in royalty mechanisms and role-based access control."
+            },
+            {
+                title: "Yield Farming with Mantle Optimization",
+                prompt: "Implement a yield farming contract that leverages Mantle's low-gas architecture, including staking, reward distribution, and adaptive reward calculations."
+            },
+            {
+                title: "Governance Token with Delegation",
+                prompt: "Design a governance token contract for a DAO on Mantle, implementing token delegation, voting power calculation, and proposal execution with gas-efficient mechanisms."
+            },
+            {
+                title: "Insurance Pool with Risk Management",
+                prompt: "Create a decentralized insurance pool contract on Mantle with dynamic risk assessment, premium calculation, and claim verification using role-based access controls."
+            },
+            {
+                title: "Multi-Signature Treasury Management",
+                prompt: "Develop a multi-signature treasury management contract optimized for Mantle, with configurable signers, transaction thresholds, and gas-efficient execution."
+            },
+            {
+                title: "Subscription Service Contract",
+                prompt: "Build a gas-optimized subscription service contract that supports recurring payments, automatic renewals, and Mantle-specific fee management."
+            },
+            {
+                title: "Decentralized Identity Verification",
+                prompt: "Design a decentralized identity verification contract on Mantle that allows secure, non-transferable identity tokens with role-based access and privacy features."
+            },
+            {
+                title: "Automated Liquidity Management",
+                prompt: "Create an automated liquidity management contract for decentralized exchanges on Mantle, implementing dynamic fee tiers and gas-optimized rebalancing strategies."
+            },
+            {
+                title: "Carbon Credit Trading Platform",
+                prompt: "Develop a carbon credit trading platform contract on Mantle with verifiable carbon offset tracking, transparent trading mechanisms, and role-based administrative controls."
+            },
+            {
+                title: "Fractional Real Estate Tokenization",
+                prompt: "Design a fractional real estate tokenization contract that supports secure token minting, dividend distribution, and Mantle-optimized transfer mechanisms."
+            }
+            ].map((example, index) => (
+            <Button 
+                key={index} 
+                variant="outline" 
+                className="w-full text-left justify-start hover:bg-blue-100"
+                onClick={() => setPrompt(example.prompt)}
+            >
+                <span className="font-semibold mr-2">🧩</span>
+                {example.title}
+            </Button>
+            ))}
+        </div>
+      </div>
 
-      {/* Guidance Section (existing implementation) */}
+      {/* Guidance Section */}
       <div className="mt-8 bg-blue-50 p-6 rounded-lg">
         <h2 className="text-2xl font-semibold mb-4 text-[#2D3FE7]">
           Tips for Best Results
@@ -352,6 +420,8 @@ export default function AIContractGenerator() {
           <li>Describe the contract's purpose and core functionality</li>
         </ul>
       </div>
+
+      
     </div>
   );
 }

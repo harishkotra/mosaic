@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Info } from 'lucide-react';
 import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent
+  CardDescription
 } from "@/components/ui/card";
 import {
   Tooltip,
@@ -41,7 +40,7 @@ const ComponentCard = ({ component, onClick }) => {
         "Multiple admin roles with different permissions",
         "Easy to add/revoke permissions"
       ],
-      useCase: "Essential for contracts requiring different permission levels (admins, operators, users)"
+      useCase: "Essential for contracts requiring different permission levels"
     },
     'bridge-adapter': {
       purpose: "Facilitates token transfers between Ethereum L1 and Mantle L2",
@@ -84,35 +83,35 @@ const ComponentCard = ({ component, onClick }) => {
   return (
     <TooltipProvider>
       <Card 
-        className="cursor-pointer hover:border-[#2D3FE7] transition-colors relative"
+        className="cursor-pointer hover:border-blue-500 hover:shadow-md transition-all duration-200"
         onClick={onClick}
       >
         <CardHeader className="p-4">
           <div className="flex justify-between items-start">
-            <CardTitle className="text-sm">{component.name}</CardTitle>
+            <CardTitle className="text-sm font-semibold">{component.name}</CardTitle>
             <Tooltip>
               <TooltipTrigger>
-                <Info className="h-4 w-4 text-gray-400 hover:text-gray-600"/>
+                <Info className="h-4 w-4 text-gray-400 hover:text-blue-500 transition-colors"/>
               </TooltipTrigger>
               <TooltipContent side="right" className="max-w-[300px] p-4">
                 <div className="space-y-2">
-                  <p className="font-semibold">Purpose:</p>
-                  <p className="text-sm">{explanations[component.id].purpose}</p>
+                  <p className="font-semibold text-sm">Purpose:</p>
+                  <p className="text-sm text-gray-200">{explanations[component.id].purpose}</p>
                   
-                  <p className="font-semibold mt-2">Benefits:</p>
-                  <ul className="text-sm list-disc pl-4">
+                  <p className="font-semibold text-sm mt-2">Benefits:</p>
+                  <ul className="text-sm list-disc pl-4 text-gray-200">
                     {explanations[component.id].benefits.map((benefit, idx) => (
                       <li key={idx}>{benefit}</li>
                     ))}
                   </ul>
                   
-                  <p className="font-semibold mt-2">Best for:</p>
-                  <p className="text-sm">{explanations[component.id].useCase}</p>
+                  <p className="font-semibold text-sm mt-2">Best for:</p>
+                  <p className="text-sm text-gray-200">{explanations[component.id].useCase}</p>
                 </div>
               </TooltipContent>
             </Tooltip>
           </div>
-          <CardDescription className="text-xs">
+          <CardDescription className="text-xs mt-1">
             {component.description}
           </CardDescription>
         </CardHeader>

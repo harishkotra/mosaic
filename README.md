@@ -67,16 +67,20 @@ Open http://localhost:3000 in your browser
 
 ## 📦 Smart Contract Components
 
-Meta Transaction
-Enable gasless transactions with advanced Mantle v2 support.
-ERC20 Token
-Optimized token implementation with Mantle-specific gas efficiencies.
-Access Control
-Robust role-based permission management.
-Bridge Adapter
-Seamless L1-L2 token transfer integrations.
-Gas Optimizer
-Intelligent gas price management for Mantle network.
+- Meta Transaction
+    Enable gasless transactions with advanced Mantle v2 support.
+
+- ERC20 Token
+    Optimized token implementation with Mantle-specific gas efficiencies.
+
+- Access Control
+    Robust role-based permission management.
+
+- Bridge Adapter
+    Seamless L1-L2 token transfer integrations.
+
+- Gas Optimizer
+    Intelligent gas price management for Mantle network.
 
 ## 🔒 Security
 
@@ -98,9 +102,9 @@ Contributions are welcome! Please see our Contributing Guidelines for details.
 
 ## 🌐 Roadmap
 
-[] Support for more contract templates
-[] Enhanced gas estimation
-[] Integrated contract verification
-[] AI-assisted contract generation
+- [ ] Support for more contract templates
+- [ ] Enhanced gas estimation
+- [ ] Integrated contract verification
+- [ ] AI-assisted contract generation
 
 Built with ❤️ for Web3 Developers
