@@ -28,6 +28,15 @@ export default function HowItWorks() {
                 <li>NFT Contract Templates</li>
               </ul>
             </div>
+            <div>
+                <Image 
+                    src="/components.png"  // Path starts from public folder
+                    alt="Choose your components"
+                    width={400}  // Specify width
+                    height={300}  // Specify height
+                    className="rounded-lg shadow-md"
+                />
+            </div>
           </div>
         </div>
 
@@ -49,7 +58,13 @@ export default function HowItWorks() {
                     </p>
                 </div>
                 <div>
-                    <img src="/api/placeholder/400/300" alt="Drag and Compose" class="rounded-lg shadow-md"/>
+                    <Image 
+                        src="/drag-drop.png"  // Path starts from public folder
+                        alt="Drag and Compose"
+                        width={400}  // Specify width
+                        height={300}  // Specify height
+                        className="rounded-lg shadow-md"
+                    />
                 </div>
             </div>
         </div>
@@ -74,7 +89,13 @@ export default function HowItWorks() {
                     </ul>
                 </div>
                 <div>
-                    <img src="/api/placeholder/400/300" alt="Deployment Process" class="rounded-lg shadow-md"/>
+                    <Image 
+                        src="/deploy.png"  // Path starts from public folder
+                        alt="Deployment Process"
+                        width={400}  // Specify width
+                        height={300}  // Specify height
+                        className="rounded-lg shadow-md"
+                    />
                 </div>
             </div>
         </div>

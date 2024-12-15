@@ -6,6 +6,14 @@ import './globals.css';  // Ensure you have Tailwind CSS configured
 export const metadata: Metadata = {
   title: 'Mosaic - Mantle Smart Contract Builder',
   description: 'Simplify smart contract development on Mantle',
+  icons: {
+    icon: [
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png'
+  },
 };
 
 export default function RootLayout({
@@ -32,19 +40,25 @@ export default function RootLayout({
                 href="/" 
                 className="text-gray-600 hover:text-[#2D3FE7] transition-colors"
               >
-                Home
+                🏠 Home
               </Link>
               <Link 
                 href="/how-it-works" 
                 className="text-gray-600 hover:text-[#2D3FE7] transition-colors"
               >
-                How It Works
+                🧭 How It Works
+              </Link>
+              <Link 
+                href="/ai-contract-generator" 
+                className="text-gray-600 hover:text-[#2D3FE7] transition-colors"
+              >
+                🤖 AI Generator
               </Link>
               <Link 
                 href="/builder" 
                 className="bg-[#2D3FE7] text-white px-4 py-2 rounded-full hover:bg-[#2D3FE7]/90 transition-colors"
               >
-                Builder
+                🛠️ Builder
               </Link>
             </div>
           </div>
