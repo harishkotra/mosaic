@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧱 Mosaic: Mantle Smart Contract Builder
 
-## Getting Started
+## 🌟 Overview
 
-First, run the development server:
+Mosaic is an innovative, no-code smart contract builder specifically designed for the Mantle blockchain ecosystem. It empowers developers and blockchain enthusiasts to rapidly compose, customize, and deploy smart contracts through an intuitive drag-and-drop interface.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## ✨ Key Features
+
+### Modular Contract Composition
+- Drag-and-drop smart contract component library
+- Pre-built, Mantle-optimized contract modules
+- Real-time Solidity code generation
+
+### Supported Contract Components
+
+- Meta Transaction Handlers
+- ERC20 Token Implementations
+- Role-Based Access Control
+- Bridge Adapters
+- Gas Optimization Utilities
+- NFT Contract Templates
+
+### Deployment Flexibility
+- Direct deployment to Mantle Mainnet
+- Easy testing on Mantle Sepolia Testnet
+- MetaMask integration
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js (v18+ recommended)
+- MetaMask Browser Extension
+- MNT Tokens for deployment
+
+### Installation
+
+1. Clone the repository
+2. 
+```
+git clone https://github.com/yourusername/mosaic.git
+cd mosaic
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Install dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Run the development server
 
-## Learn More
+```
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open http://localhost:3000 in your browser
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠 Technology Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Next.js 15+
+- React
+- TypeScript
+- Tailwind CSS
+- Ethers.js
+- React DnD (Drag and Drop)
+- Shadcn UI Components
 
-## Deploy on Vercel
+## 📦 Smart Contract Components
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Meta Transaction
+Enable gasless transactions with advanced Mantle v2 support.
+ERC20 Token
+Optimized token implementation with Mantle-specific gas efficiencies.
+Access Control
+Robust role-based permission management.
+Bridge Adapter
+Seamless L1-L2 token transfer integrations.
+Gas Optimizer
+Intelligent gas price management for Mantle network.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔒 Security
+
+- All contract templates are pre-audited
+- Uses best practices for Solidity development
+- Supports role-based access control
+- Built with Mantle's architectural considerations
+
+## 🤝 Contributing
+Contributions are welcome! Please see our Contributing Guidelines for details.
+
+### How to Contribute
+
+- Fork the repository
+- Create your feature branch (`git checkout -b feature/AmazingFeature`)
+- Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+- Push to the branch (`git push origin feature/AmazingFeature`)
+- Open a Pull Request
+
+## 🌐 Roadmap
+
+- Support for more contract templates
+- Enhanced gas estimation
+- Integrated contract verification
+- AI-assisted contract generation
+
+Built with ❤️ for Web3 Developers
