@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { AlertCircle, Code2, Package, X } from 'lucide-react';
@@ -25,6 +25,42 @@ import {
 } from "@/components/ui/alert";
 import { CodePreview } from './CodePreview';
 import ComponentCard from './EnhancedComponentCard';
+
+interface DragItem {
+  id: string;
+  index: number;
+}
+
+interface DraggableComponentProps {
+  id: string;
+  children: React.ReactNode;
+  index: number;
+  moveComponent?: (dragIndex: number, hoverIndex: number) => void;
+}
+
+interface ContractComponent {
+  id: string;
+  name: string;
+  description: string;
+  template: string;
+}
+
+interface DeploymentStatus {
+  type: 'error' | 'success' | 'info';
+  message: string | React.ReactNode;
+}
+
+declare global {
+  interface Window {
+    ethereum?: {
+      request: (args: {
+        method: string;
+        params?: any[];
+      }) => Promise<any>;
+      isMetaMask?: boolean;
+    }
+  }
+}
 
 // Contract templates with Mantle-specific features
 const CONTRACT_TEMPLATES = {
@@ -179,10 +215,18 @@ const NETWORKS = {
   }
 };
 
-const DraggableComponent = ({ id, children, index, moveComponent }) => {
+const DraggableComponent: React.FC<DraggableComponentProps> = ({ 
+  id, 
+  children, 
+  index, 
+  moveComponent 
+}) => {
   const [{ isDragging }, drag] = useDrag({
     type: 'component',
-    item: { id, index },
+    item: { id, index } as DragItem,
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
   });
 
   const [, drop] = useDrop({
@@ -197,9 +241,20 @@ const DraggableComponent = ({ id, children, index, moveComponent }) => {
     },
   });
 
+  // Combine the drag and drop refs using useMemo
+  const dragDropRef = React.useMemo(
+    () => {
+      return (node: HTMLDivElement | null) => {
+        drag(node);
+        drop(node);
+      };
+    },
+    [drag, drop]
+  );
+
   return (
     <div 
-      ref={(node) => drag(drop(node))} 
+      ref={dragDropRef}
       className={`transition-opacity duration-200 ${isDragging ? 'opacity-50' : 'opacity-100'}`}
     >
       {children}
@@ -208,10 +263,10 @@ const DraggableComponent = ({ id, children, index, moveComponent }) => {
 };
 
 export default function MosaicBuilder() {
-  const [selectedComponents, setSelectedComponents] = useState([]);
-  const [deploymentStatus, setDeploymentStatus] = useState(null);
+  const [selectedComponents, setSelectedComponents] = useState<ContractComponent[]>([]);
+  const [deploymentStatus, setDeploymentStatus] = useState<DeploymentStatus | null>(null);
 
-  const moveComponent = useCallback((dragIndex, hoverIndex) => {
+  const moveComponent = useCallback((dragIndex: number, hoverIndex: number) => {
     setSelectedComponents((prevComponents) => {
       const newComponents = [...prevComponents];
       const dragComponent = newComponents[dragIndex];
@@ -223,6 +278,10 @@ export default function MosaicBuilder() {
 
   // Function to deploy the contract
   const deployContract = async (network) => {
+    if (!window.ethereum) {
+      throw new Error('MetaMask is not installed');
+    }
+
     try {
       // First ensure MetaMask is connected to the right network
       await window.ethereum.request({
@@ -325,7 +384,7 @@ export default function MosaicBuilder() {
               rel="noopener noreferrer"
               className="text-blue-600 hover:text-blue-800 underline"
             >
-              View on Explorer: {address}
+              View on Explorer: {address.toString()}
             </a>
           </div>
         )

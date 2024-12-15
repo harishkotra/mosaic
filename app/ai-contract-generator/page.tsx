@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,42 +10,26 @@ import { materialOceanic } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { Copy, Wand2, Download, Upload, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
-// Network configurations
-// const NETWORKS = {
-//     mantleTestnet: {
-//         chainId: '0x138B', // 5003 in hex
-//         rpcUrls: ['https://rpc.sepolia.mantle.xyz'],
-//         chainName: 'Mantle Sepolia Testnet',
-//         nativeCurrency: {
-//             name: 'MNT',
-//             symbol: 'MNT',
-//             decimals: 18
-//         },
-//         blockExplorerUrls: ['https://sepolia.mantlescan.xyz']
-//     },
-//     mantle: {
-//         chainId: '0x1388', // 5000 in hex
-//         rpcUrls: ['https://rpc.mantle.xyz'],
-//         chainName: 'Mantle',
-//         nativeCurrency: {
-//             name: 'MNT',
-//             symbol: 'MNT',
-//             decimals: 18
-//         },
-//         blockExplorerUrls: ['https://mantlescan.xyz']
-//     }
-// };
+// Type definitions
+type StatusType = 'error' | 'success' | 'info' | null;
+
+interface StatusState {
+  type: StatusType;
+  message: string | ReactNode;
+}
+
+const nullStatus: StatusState = {
+  type: null,
+  message: ''
+};
 
 export default function AIContractGenerator() {
   const [prompt, setPrompt] = useState('');
   const [generatedContract, setGeneratedContract] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [deploymentStatus, setDeploymentStatus] = useState<{
-    type: 'error' | 'success' | 'info' | null,
-    message: string | React.ReactNode
-  }>(null);
+  const [status, setStatus] = useState<StatusState>(nullStatus);
 
-  // Generate Contract Function (existing implementation)
+  // Generate Contract Function
   const generateContract = async () => {
     if (!prompt.trim()) {
       toast.error('Please provide a contract description');
@@ -53,7 +38,7 @@ export default function AIContractGenerator() {
 
     setIsLoading(true);
     setGeneratedContract('');
-    setDeploymentStatus(null);
+    setStatus(nullStatus);
 
     try {
       const response = await fetch('/api/generate-contract', {
@@ -80,8 +65,9 @@ export default function AIContractGenerator() {
     }
   };
 
-  // Copy Contract Function (existing implementation)
+  // Copy Contract Function
   const copyContract = () => {
+    if (!generatedContract) return;
     navigator.clipboard.writeText(generatedContract);
     toast.success('Contract copied to clipboard');
   };
@@ -111,108 +97,66 @@ export default function AIContractGenerator() {
       const reader = new FileReader();
       reader.onload = (e) => {
         const text = e.target?.result as string;
-        setGeneratedContract(text);
-        toast.success('Contract loaded successfully');
+        if (text) {
+          setGeneratedContract(text);
+          toast.success('Contract loaded successfully');
+        }
       };
       reader.readAsText(file);
     }
   };
 
-//   // Deployment Function
-//   const deployContract = async (isTestnet: boolean) => {
-//     if (!generatedContract) {
-//       toast.error('Generate a contract first');
-//       return;
-//     }
-
-//     try {
-//       // Check if MetaMask is installed
-//       if (!window.ethereum) {
-//         toast.error('Please install MetaMask to deploy contracts');
-//         return;
-//       }
-
-//       // Request account access
-//       await window.ethereum.request({ method: 'eth_requestAccounts' });
-
-//       // Set deployment status
-//       setDeploymentStatus({
-//         type: 'info',
-//         message: `Deploying to ${isTestnet ? 'Sepolia Testnet' : 'Mantle Mainnet'}...`
-//       });
-
-//       // Select network based on testnet flag
-//       const network = isTestnet ? NETWORKS.mantleTestnet : NETWORKS.mantle;
-
-//       // Switch to the correct network
-//       try {
-//         await window.ethereum.request({
-//           method: 'wallet_switchEthereumChain',
-//           params: [{ chainId: network.chainId }],
-//         });
-//       } catch (switchError: any) {
-//         // If the network isn't added, add it
-//         if (switchError.code === 4902) {
-//           await window.ethereum.request({
-//             method: 'wallet_addEthereumChain',
-//             params: [{
-//               chainId: network.chainId,
-//               chainName: network.chainName,
-//               nativeCurrency: network.nativeCurrency,
-//               rpcUrls: network.rpcUrls,
-//               blockExplorerUrls: network.blockExplorerUrls
-//             }],
-//           });
-//         }
-//       }
-
-//       // Create provider and signer
-//       const provider = new ethers.BrowserProvider(window.ethereum);
-//       const signer = await provider.getSigner();
-
-//       // Simplified contract deployment (you might want to improve compilation)
-//       const factory = new ethers.ContractFactory(
-//         [], // ABI (placeholder)
-//         `0x${Buffer.from(generatedContract).toString('hex')}`, // Very basic bytecode conversion
-//         signer
-//       );
-
-//       const contract = await factory.deploy();
-//       const deployedContract = await contract.deployTransaction.wait();
-
-//       // Update deployment status
-//       setDeploymentStatus({
-//         type: 'success',
-//         message: (
-//           <>
-//             Contract deployed successfully! 
-//             <a 
-//               href={`${network.blockExplorerUrls[0]}/address/${deployedContract.contractAddress}`} 
-//               target="_blank" 
-//               rel="noopener noreferrer"
-//               className="ml-2 text-blue-600 underline"
-//             >
-//               View on Explorer
-//             </a>
-//           </>
-//         )
-//       });
-
-//     } catch (error: any) {
-//       console.error('Deployment error:', error);
-      
-//       const errorMessage = error.code === 4001 
-//         ? 'Transaction rejected by user' 
-//         : error.message.includes('insufficient funds')
-//         ? 'Insufficient MNT balance for gas fees'
-//         : 'Deployment failed';
-
-//       setDeploymentStatus({
-//         type: 'error',
-//         message: `Deployment error: ${errorMessage}`
-//       });
-//     }
-//   };
+  // Example contract prompts
+  const contractPrompts = [
+    {
+        title: "Cross-Chain Token Bridge",
+        prompt: "Design a cross-chain ERC20 token bridge between Mantle L1 and L2, implementing secure proof verification and gas-optimized transfer mechanisms."
+    },
+    {
+        title: "Meta Transaction Gasless Wallet",
+        prompt: "Create a meta-transaction enabled wallet contract for Mantle that allows gasless transactions, with nonce management and signature verification using Mantle's gas price oracle."
+    },
+    {
+        title: "Dynamic Gas Price NFT Marketplace",
+        prompt: "Develop an NFT marketplace contract that dynamically adjusts listing fees based on Mantle's current gas price oracle, with built-in royalty mechanisms and role-based access control."
+    },
+    {
+        title: "Yield Farming with Mantle Optimization",
+        prompt: "Implement a yield farming contract that leverages Mantle's low-gas architecture, including staking, reward distribution, and adaptive reward calculations."
+    },
+    {
+        title: "Governance Token with Delegation",
+        prompt: "Design a governance token contract for a DAO on Mantle, implementing token delegation, voting power calculation, and proposal execution with gas-efficient mechanisms."
+    },
+    {
+        title: "Insurance Pool with Risk Management",
+        prompt: "Create a decentralized insurance pool contract on Mantle with dynamic risk assessment, premium calculation, and claim verification using role-based access controls."
+    },
+    {
+        title: "Multi-Signature Treasury Management",
+        prompt: "Develop a multi-signature treasury management contract optimized for Mantle, with configurable signers, transaction thresholds, and gas-efficient execution."
+    },
+    {
+        title: "Subscription Service Contract",
+        prompt: "Build a gas-optimized subscription service contract that supports recurring payments, automatic renewals, and Mantle-specific fee management."
+    },
+    {
+        title: "Decentralized Identity Verification",
+        prompt: "Design a decentralized identity verification contract on Mantle that allows secure, non-transferable identity tokens with role-based access and privacy features."
+    },
+    {
+        title: "Automated Liquidity Management",
+        prompt: "Create an automated liquidity management contract for decentralized exchanges on Mantle, implementing dynamic fee tiers and gas-optimized rebalancing strategies."
+    },
+    {
+        title: "Carbon Credit Trading Platform",
+        prompt: "Develop a carbon credit trading platform contract on Mantle with verifiable carbon offset tracking, transparent trading mechanisms, and role-based administrative controls."
+    },
+    {
+        title: "Fractional Real Estate Tokenization",
+        prompt: "Design a fractional real estate tokenization contract that supports secure token minting, dividend distribution, and Mantle-optimized transfer mechanisms."
+    }
+  ];
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -220,30 +164,28 @@ export default function AIContractGenerator() {
         AI Smart Contract Generator for Mantle
       </h1>
 
-      {/* Deployment Status Alert */}
-      {deploymentStatus && (
+      {/* Status Alert */}
+      {status.type && (
         <div className={`
           mb-4 p-4 rounded-lg flex items-center
-          ${deploymentStatus.type === 'error' ? 'bg-red-100 text-red-800' : 
-            deploymentStatus.type === 'success' ? 'bg-green-100 text-green-800' : 
+          ${status.type === 'error' ? 'bg-red-100 text-red-800' : 
+            status.type === 'success' ? 'bg-green-100 text-green-800' : 
             'bg-blue-100 text-blue-800'}
         `}>
           <AlertCircle className="mr-2 h-5 w-5" />
-          {deploymentStatus.message}
+          {status.message}
         </div>
       )}
 
       <div className="grid md:grid-cols-2 gap-8">
-        {/* Prompt Input Card (existing implementation) */}
+        {/* Prompt Input Card */}
         <Card>
           <CardHeader>
             <CardTitle>Describe Your Contract</CardTitle>
           </CardHeader>
           <CardContent>
             <Textarea
-              placeholder="Enter a detailed description of the smart contract you want to generate. 
-              Example: 'Create an ERC20 token with minting and burning capabilities, 
-              implement role-based access control, and add Mantle-specific gas optimizations.'"
+              placeholder="Enter a detailed description of the smart contract you want to generate..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               className="min-h-[200px]"
@@ -261,35 +203,33 @@ export default function AIContractGenerator() {
           </CardContent>
         </Card>
 
-        {/* Generated Contract Preview Card (existing implementation) */}
+        {/* Generated Contract Preview Card */}
         <Card>
           <CardHeader>
             <CardTitle>Generated Contract</CardTitle>
           </CardHeader>
           <CardContent>
             {generatedContract ? (
-              <>
-                <div className="relative">
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="absolute top-2 right-2"
-                    onClick={copyContract}
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                  <SyntaxHighlighter 
-                    language="solidity" 
-                    style={materialOceanic}
-                    customStyle={{ 
-                      maxHeight: '500px', 
-                      overflowY: 'auto' 
-                    }}
-                  >
-                    {generatedContract}
-                  </SyntaxHighlighter>
-                </div>
-              </>
+              <div className="relative">
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  className="absolute top-2 right-2"
+                  onClick={copyContract}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+                <SyntaxHighlighter 
+                  language="solidity" 
+                  style={materialOceanic}
+                  customStyle={{ 
+                    maxHeight: '500px', 
+                    overflowY: 'auto' 
+                  }}
+                >
+                  {generatedContract}
+                </SyntaxHighlighter>
+              </div>
             ) : (
               <p className="text-muted-foreground text-center py-8">
                 Your AI-generated contract will appear here
@@ -299,7 +239,7 @@ export default function AIContractGenerator() {
         </Card>
       </div>
 
-      {/* New Action Buttons */}
+      {/* Action Buttons */}
       <div className="mt-6 flex space-x-4">
         <Button 
           onClick={saveContractLocally}
@@ -322,92 +262,29 @@ export default function AIContractGenerator() {
         >
           <Upload className="mr-2 h-4 w-4" /> Load Contract
         </Button>
-
-        {/* <Button 
-          onClick={() => deployContract(true)}
-          disabled={!generatedContract}
-          variant="outline"
-        >
-          Deploy to Testnet
-        </Button>
-        <Button 
-          onClick={() => deployContract(false)}
-          disabled={!generatedContract}
-          className="bg-[#2D3FE7] hover:bg-[#2D3FE7]/90"
-        >
-          Deploy to Mainnet
-        </Button> */}
       </div>
-      
+
+      {/* Example Prompts Section */}
       <div className="mt-8 bg-blue-50/50 p-6 rounded-lg border border-blue-200">
         <h2 className="text-2xl font-semibold mb-4 text-[#2D3FE7]">
-            Mantle-Specific Contract Prompt Ideas
+          Mantle-Specific Contract Prompt Ideas
         </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-            {
-                title: "Cross-Chain Token Bridge",
-                prompt: "Design a cross-chain ERC20 token bridge between Mantle L1 and L2, implementing secure proof verification and gas-optimized transfer mechanisms."
-            },
-            {
-                title: "Meta Transaction Gasless Wallet",
-                prompt: "Create a meta-transaction enabled wallet contract for Mantle that allows gasless transactions, with nonce management and signature verification using Mantle's gas price oracle."
-            },
-            {
-                title: "Dynamic Gas Price NFT Marketplace",
-                prompt: "Develop an NFT marketplace contract that dynamically adjusts listing fees based on Mantle's current gas price oracle, with built-in royalty mechanisms and role-based access control."
-            },
-            {
-                title: "Yield Farming with Mantle Optimization",
-                prompt: "Implement a yield farming contract that leverages Mantle's low-gas architecture, including staking, reward distribution, and adaptive reward calculations."
-            },
-            {
-                title: "Governance Token with Delegation",
-                prompt: "Design a governance token contract for a DAO on Mantle, implementing token delegation, voting power calculation, and proposal execution with gas-efficient mechanisms."
-            },
-            {
-                title: "Insurance Pool with Risk Management",
-                prompt: "Create a decentralized insurance pool contract on Mantle with dynamic risk assessment, premium calculation, and claim verification using role-based access controls."
-            },
-            {
-                title: "Multi-Signature Treasury Management",
-                prompt: "Develop a multi-signature treasury management contract optimized for Mantle, with configurable signers, transaction thresholds, and gas-efficient execution."
-            },
-            {
-                title: "Subscription Service Contract",
-                prompt: "Build a gas-optimized subscription service contract that supports recurring payments, automatic renewals, and Mantle-specific fee management."
-            },
-            {
-                title: "Decentralized Identity Verification",
-                prompt: "Design a decentralized identity verification contract on Mantle that allows secure, non-transferable identity tokens with role-based access and privacy features."
-            },
-            {
-                title: "Automated Liquidity Management",
-                prompt: "Create an automated liquidity management contract for decentralized exchanges on Mantle, implementing dynamic fee tiers and gas-optimized rebalancing strategies."
-            },
-            {
-                title: "Carbon Credit Trading Platform",
-                prompt: "Develop a carbon credit trading platform contract on Mantle with verifiable carbon offset tracking, transparent trading mechanisms, and role-based administrative controls."
-            },
-            {
-                title: "Fractional Real Estate Tokenization",
-                prompt: "Design a fractional real estate tokenization contract that supports secure token minting, dividend distribution, and Mantle-optimized transfer mechanisms."
-            }
-            ].map((example, index) => (
+          {contractPrompts.map((example, index) => (
             <Button 
-                key={index} 
-                variant="outline" 
-                className="w-full text-left justify-start hover:bg-blue-100"
-                onClick={() => setPrompt(example.prompt)}
+              key={index} 
+              variant="outline" 
+              className="w-full text-left justify-start hover:bg-blue-100"
+              onClick={() => setPrompt(example.prompt)}
             >
-                <span className="font-semibold mr-2">🧩</span>
-                {example.title}
+              <span className="font-semibold mr-2">🧩</span>
+              {example.title}
             </Button>
-            ))}
+          ))}
         </div>
       </div>
 
-      {/* Guidance Section */}
+      {/* Tips Section */}
       <div className="mt-8 bg-blue-50 p-6 rounded-lg">
         <h2 className="text-2xl font-semibold mb-4 text-[#2D3FE7]">
           Tips for Best Results
@@ -419,8 +296,6 @@ export default function AIContractGenerator() {
           <li>Describe the contract&apos;s purpose and core functionality</li>
         </ul>
       </div>
-
-      
     </div>
   );
 }

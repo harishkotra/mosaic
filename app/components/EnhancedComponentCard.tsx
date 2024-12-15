@@ -13,8 +13,35 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-const ComponentCard = ({ component, onClick }) => {
-  const explanations = {
+// Define the structure of a component
+interface ContractComponent {
+  id: string;
+  name: string;
+  description: string;
+  template?: string;
+}
+
+// Define the structure of the explanation object
+interface ComponentExplanation {
+  purpose: string;
+  benefits: string[];
+  useCase: string;
+}
+
+// Define the structure of all explanations
+type ExplanationsType = {
+  [key: string]: ComponentExplanation;
+}
+
+// Define the props interface for the component
+interface ComponentCardProps {
+  component: ContractComponent;
+  onClick: () => void;
+}
+
+const ComponentCard: React.FC<ComponentCardProps> = ({ component, onClick }) => {
+  // Define the explanations object with its type
+  const explanations: ExplanationsType = {
     'meta-tx': {
       purpose: "Enables gasless transactions where a third party can pay for gas fees on behalf of users",
       benefits: [
@@ -80,6 +107,12 @@ const ComponentCard = ({ component, onClick }) => {
     }
   };
 
+  // Add type safety check for the explanation lookup
+  const componentExplanation = explanations[component.id];
+  if (!componentExplanation) {
+    return null; // Or handle the error case appropriately
+  }
+
   return (
     <TooltipProvider>
       <Card 
@@ -96,17 +129,17 @@ const ComponentCard = ({ component, onClick }) => {
               <TooltipContent side="right" className="max-w-[300px] p-4">
                 <div className="space-y-2">
                   <p className="font-semibold text-sm">Purpose:</p>
-                  <p className="text-sm text-gray-200">{explanations[component.id].purpose}</p>
+                  <p className="text-sm text-gray-200">{componentExplanation.purpose}</p>
                   
                   <p className="font-semibold text-sm mt-2">Benefits:</p>
                   <ul className="text-sm list-disc pl-4 text-gray-200">
-                    {explanations[component.id].benefits.map((benefit, idx) => (
+                    {componentExplanation.benefits.map((benefit, idx) => (
                       <li key={idx}>{benefit}</li>
                     ))}
                   </ul>
                   
                   <p className="font-semibold text-sm mt-2">Best for:</p>
-                  <p className="text-sm text-gray-200">{explanations[component.id].useCase}</p>
+                  <p className="text-sm text-gray-200">{componentExplanation.useCase}</p>
                 </div>
               </TooltipContent>
             </Tooltip>
